@@ -109,17 +109,21 @@ add_action('h5p_alter_filtered_parameters', 'h5pmods_alter_parameters', 10, 4);
  * @param object &$scripts List of JavaScripts that will be loaded.
  * @param array $libraries The libraries which the scripts belong to.
  * @param string $embed_type Possible values are: div, iframe, external, editor.
+ * @param object &$custom_script_parameters Optional parameters to make available in H5PIntegration,
+ *               such as nonces, user names, etc.
  */
-function h5pmods_alter_scripts(&$scripts, $libraries, $embed_type) {
+function h5pmods_alter_scripts(&$scripts, $libraries, $embed_type, &$custom_script_parameters) {
   if (isset($libraries['H5P.DragQuestion'])) {
     $scripts[] = (object) array(
       // Path can be relative to wp-content/uploads/h5p or absolute.
       'path' => plugin_dir_url( __FILE__ ) . 'scripts/score-tracking.js',
       'version' => '?ver=1.2.3' // Cache buster
     );
+
+    $custom_script_parameters->foo = 'bar';
   }
 }
-add_action('h5p_alter_library_scripts', 'h5pmods_alter_scripts', 10, 3);
+add_action('h5p_alter_library_scripts', 'h5pmods_alter_scripts', 10, 4);
 
 /**
  * Allows you to alter which stylesheets are loaded for H5P. This is
